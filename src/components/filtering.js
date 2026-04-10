@@ -1,40 +1,57 @@
-import { createComparison, defaultRules } from "../lib/compare.js";
-
-// @todo: #4.3 — настроить компаратор
-const compare = createComparison(defaultRules);
-
 export function initFiltering(elements, indexes) {
-    // @todo: #4.1 — заполнить выпадающие списки опциями
+    // 1. Заполняем выпадающие списки (этот кусок у тебя работает отлично)
     Object.keys(indexes).forEach((elementName) => {
-        elements[elementName].append(
-            ...Object.values(indexes[elementName]).map((name) => {
-                const option = document.createElement("option");
-                option.value = name;
-                option.textContent = name;
-                return option;
-            })
-        );
+        if (elements[elementName]) {
+            elements[elementName].append(
+                ...Object.values(indexes[elementName]).map((name) => {
+                    const option = document.createElement("option");
+                    option.value = name;
+                    option.textContent = name;
+                    return option;
+                })
+            );
+        }
     });
 
     return (data, state, action) => {
-        // @todo: #4.2 — обработать очистку поля
+        // 2. Обработка кнопки очистки конкретного поля
         if (action && action.name === "clear") {
-            const parent = action.parentElement;
-            const input = parent.querySelector("input");
-
-            if (input) {
-                input.value = "";
-            }
-
             const fieldName = action.dataset.field;
             if (fieldName) {
                 state[fieldName] = "";
+                const input = action.parentElement.querySelector("input, select");
+                if (input) input.value = "";
             }
         }
 
-        // @todo: #4.5 — отфильтровать данные используя компаратор
-        // Мы используем filter, чтобы оставить только те строки (row),
-        // которые соответствуют состоянию фильтров (state) по правилам defaultRules.
-        return data.filter((row) => compare(row, state));
+        // 3. Обработка глобального сброса (reset)
+        if (action && action.name === "reset") {
+            Object.keys(state).forEach(key => state[key] = "");
+        }
+
+        // 4. Прямая фильтрация данных
+        return data.filter((row) => {
+            // Проверка: Продавец (селект)
+            if (state.searchBySeller && row.seller !== state.searchBySeller) {
+                return false; // не совпадает — выкидываем строку
+            }
+
+            // Проверка: Сумма ОТ (больше или равно)
+            if (state.totalFrom) {
+                if (parseFloat(row.total) < parseFloat(state.totalFrom)) {
+                    return false;
+                }
+            }
+
+            // Проверка: Сумма ДО (меньше или равно)
+            if (state.totalTo) {
+                if (parseFloat(row.total) > parseFloat(state.totalTo)) {
+                    return false;
+                }
+            }
+
+            // Если строка прошла все проверки, оставляем её
+            return true;
+        });
     };
 }
