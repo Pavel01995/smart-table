@@ -1,5 +1,5 @@
 export function initFiltering(elements, indexes) {
-    // 1. Заполняем выпадающие списки 
+    // 1. Заполняем выпадающие списки
     Object.keys(indexes).forEach((elementName) => {
         if (elements[elementName]) {
             elements[elementName].append(
@@ -26,7 +26,7 @@ export function initFiltering(elements, indexes) {
 
         // 3. Глобальный сброс
         if (action && action.name === "reset") {
-            Object.keys(state).forEach(key => state[key] = "");
+            Object.keys(state).forEach((key) => (state[key] = ""));
         }
 
         // 4. Прямая фильтрация со всеми полями
@@ -34,19 +34,34 @@ export function initFiltering(elements, indexes) {
             // --- Проверка Даты ---
             // Имя поля в форме может быть searchByDate или date
             const dateValue = state.searchByDate ?? state.date ?? "";
-            if (dateValue && !String(row.date || "").toLowerCase().includes(dateValue.toLowerCase())) {
+            if (
+                dateValue &&
+                !String(row.date || "")
+                    .toLowerCase()
+                    .includes(dateValue.toLowerCase())
+            ) {
                 return false;
             }
 
             // --- Проверка Покупателя ---
             const customerValue = state.searchByCustomer ?? state.customer ?? "";
-            if (customerValue && !String(row.customer || "").toLowerCase().includes(customerValue.toLowerCase())) {
+            if (
+                customerValue &&
+                !String(row.customer || "")
+                    .toLowerCase()
+                    .includes(customerValue.toLowerCase())
+            ) {
                 return false;
             }
 
             // --- Проверка Продавца ---
             const sellerValue = state.searchBySeller ?? state.seller ?? "";
-            if (sellerValue && !String(row.seller || "").toLowerCase().includes(sellerValue.toLowerCase())) {
+            if (
+                sellerValue &&
+                !String(row.seller || "")
+                    .toLowerCase()
+                    .includes(sellerValue.toLowerCase())
+            ) {
                 return false;
             }
 
