@@ -48,6 +48,7 @@ async function render(action) {
     query = applyPagination(query, state, action);
     const { total, items } = await api.getRecords(query);
     updatePagination(total, query);
+    console.log(items);
     sampleTable.render(items);
 }
 
@@ -92,17 +93,5 @@ async function init() {
     });
 
 }
-// ... весь твой код с функциями render, collectState и т.д. выше ...
 
-// 1. Создаем функцию запуска
-async function bootstrap() {
-    try {
-        await init();   // Ждем загрузки данных для фильтров (продавцов)
-        await render(); // Рисуем таблицу первый раз
-    } catch (e) {
-        console.error("Ошибка запуска приложения:", e);
-    }
-}
-
-// 2. ВЫЗЫВАЕМ ЕЁ (самая последняя строка файла)
-bootstrap();
+init().then(render)
