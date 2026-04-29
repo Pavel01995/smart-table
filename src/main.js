@@ -93,14 +93,4 @@ async function init() {
 
 }
 
-// В самом конце main.js
-async function startApp() {
-    try {
-        await init();   // Ждем, пока загрузятся индексы
-        await render(); // Только потом рисуем таблицу
-    } catch (err) {
-        console.error("Ошибка при запуске:", err);
-    }
-}
-
-startApp();
+init().then(render)

@@ -1,1 +1,1 @@
-  https://github.com/Pavel01995/smart-table
+https://github.com/Pavel01995/smart-table
