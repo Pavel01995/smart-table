@@ -1,12 +1,12 @@
 import './fonts/ys-display/fonts.css'
 import './style.css'
 
-import { data as sourceData } from "./data/dataset_1.js";
+import {data as sourceData} from "./data/dataset_1.js";
 
-import { initData } from "./data.js";
-import { processFormData } from "./lib/utils.js";
+import {initData} from "./data.js";
+import {processFormData} from "./lib/utils.js";
 
-import { initTable } from "./components/table.js";
+import {initTable} from "./components/table.js";
 import { initPagination } from './components/pagination.js';
 import { initSorting } from './components/sorting.js';
 import { initFiltering } from './components/filtering.js';
@@ -15,9 +15,7 @@ import { initSearching } from './components/searching.js';
 
 
 // Исходные данные используемые в render()
-// В начале файла, где объявляешь переменные
-
-const { data, ...indexes } = initData(sourceData);
+const {data, ...indexes} = initData(sourceData);
 
 /**
  * Сбор и обработка полей из таблицы
@@ -26,13 +24,14 @@ const { data, ...indexes } = initData(sourceData);
 function collectState() {
     const state = processFormData(new FormData(sampleTable.container));
 
-    const rowsPerPage = parseInt(state.rowsPerPage);    // приведём количество страниц к числу
-    const page = parseInt(state.page ?? 1);             // номер страницы по умолчанию 1 и тоже число
+    // Убедись, что тут стоит именно такая защита на (1)
+    const page = parseInt(state.page) || 1;
+    const rowsPerPage = parseInt(state.rowsPerPage) || 10;
 
-    return {                                            // расширьте существующий return вот так
+    return {
         ...state,
-        rowsPerPage,
-        page
+        page,
+        rowsPerPage
     };
 }
 
@@ -40,25 +39,23 @@ function collectState() {
  * Перерисовка состояния таблицы при любых изменениях
  * @param {HTMLButtonElement?} action
  */
-async function render(action) {
+ async function render(action) {
     let state = collectState(); // состояние полей из таблицы
-    let query = {};// копируем для последующего изменения
+     let query = {};// копируем для последующего изменения
     // @todo: использование
-    query = applySearching(query, state, action);
-    query = applyFiltering(query, state, action);
-    query = applySorting(query, state, action);
-    query = applyPagination(query, state, action);
-    const { total, items } = await api.getRecords(query);
-    updatePagination(total, query);
-    console.log('RENDER DATA:', items.length);
+     query = applySearching(query, state, action);
+     query = applyFiltering(query, state, action);
+     query = applySorting(query, state, action);
+     query = applyPagination(query, state, action);
+     const { total, items } = await api.getRecords(query);
+     updatePagination(total, query); 
     sampleTable.render(items);
-    await sampleTable.render(items);
 }
 
 const sampleTable = initTable({
     tableTemplate: 'table',
     rowTemplate: 'row',
-    before: ['search', 'header', 'filter'], // Добавляем вывод шаблона header до таблицы
+    before: ['search','header','filter'], // Добавляем вывод шаблона header до таблицы
     after: ['pagination'] // Добавляем вывод шаблона пагинации
 }, render);
 
@@ -85,7 +82,7 @@ appRoot.appendChild(sampleTable.container);
 
 const { applyFiltering, updateIndexes } = initFiltering(sampleTable.filter.elements, {    // передаём элементы фильтра
     searchBySeller: indexes.sellers                                    // для элемента с именем searchBySeller устанавливаем массив продавцов
-});
+}); 
 
 const applySearching = initSearching('search');
 const api = initData(sourceData);
@@ -94,9 +91,8 @@ async function init() {
     const indexes = await api.getIndexes();
     updateIndexes(sampleTable.filter.elements, {
         searchBySeller: indexes.sellers
-
     });
 
 }
 
-init().then(render)
+ init().then(render)
