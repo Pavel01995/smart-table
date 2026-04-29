@@ -8,7 +8,6 @@ export function initTable(settings, onAction) {
         root[subName] = cloneTemplate(subName);
         root.container.prepend(root[subName].container);
     });
-
     after.forEach((subName) => {
         root[subName] = cloneTemplate(subName);
         root.container.append(root[subName].container);
