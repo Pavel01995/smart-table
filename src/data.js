@@ -18,10 +18,13 @@ export function initData() {
 
     const getIndexes = async () => {
         if (!sellers || !customers) {
-            [sellers, customers] = await Promise.all([
+            const [rawSellers, rawCustomers] = await Promise.all([
                 fetch(`${BASE_URL}/sellers`).then(res => res.json()),
                 fetch(`${BASE_URL}/customers`).then(res => res.json()),
             ]);
+
+            sellers = rawSellers;
+            customers = rawCustomers;
         }
 
         return { sellers, customers };

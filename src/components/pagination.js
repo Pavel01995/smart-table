@@ -2,7 +2,7 @@ import { getPages } from "../lib/utils.js";
 
 export const initPagination = ({ pages, fromRow, toRow, totalRows }, createPage) => {
     const pageTemplate = pages.firstElementChild.cloneNode(true);
-    pages.innerHTML = "";
+    pages.innerHTML = '';
 
     let pageCount;
 
@@ -29,7 +29,7 @@ export const initPagination = ({ pages, fromRow, toRow, totalRows }, createPage)
 
         return Object.assign({}, query, {
             limit,
-            page,
+            page
         });
     };
 
@@ -51,6 +51,6 @@ export const initPagination = ({ pages, fromRow, toRow, totalRows }, createPage)
 
     return {
         updatePagination,
-        applyPagination,
+        applyPagination
     };
 };
