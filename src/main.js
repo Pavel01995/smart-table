@@ -92,5 +92,17 @@ async function init() {
     });
 
 }
+// ... весь твой код с функциями render, collectState и т.д. выше ...
 
-init().then(render)
+// 1. Создаем функцию запуска
+async function bootstrap() {
+    try {
+        await init();   // Ждем загрузки данных для фильтров (продавцов)
+        await render(); // Рисуем таблицу первый раз
+    } catch (e) {
+        console.error("Ошибка запуска приложения:", e);
+    }
+}
+
+// 2. ВЫЗЫВАЕМ ЕЁ (самая последняя строка файла)
+bootstrap();
