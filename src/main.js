@@ -24,15 +24,13 @@ const { data, ...indexes } = initData(sourceData);
  * @returns {Object}
  */
 function collectState() {
-    const state = processFormData(new FormData(sampleTable.container));
+    const formData = new FormData(sampleTable.container);
+    const state = processFormData(formData);
 
-    const rowsPerPage = parseInt(state.rowsPerPage);    // приведём количество страниц к числу
-    const page = parseInt(state.page ?? 1);             // номер страницы по умолчанию 1 и тоже число
-
-    return {                                            // расширьте существующий return вот так
+    return {
         ...state,
-        rowsPerPage,
-        page
+        rowsPerPage: parseInt(state.rowsPerPage) || 10,
+        page: parseInt(state.page) || 1 // Убрал ; и добавил логику по умолчанию
     };
 }
 
@@ -92,7 +90,7 @@ async function init() {
     updateIndexes(sampleTable.filter.elements, {
         searchBySeller: indexes.sellers
     });
- await render();
+    await render();
 }
 
 
