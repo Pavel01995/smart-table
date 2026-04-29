@@ -50,6 +50,7 @@ async function render(action) {
     query = applyPagination(query, state, action);
     const { total, items } = await api.getRecords(query);
     updatePagination(total, query);
+    console.log('RENDER DATA:', items.length);
     sampleTable.render(items);
 }
 
@@ -87,10 +88,12 @@ const { applyFiltering, updateIndexes } = initFiltering(sampleTable.filter.eleme
 
 const applySearching = initSearching('search');
 const api = initData(sourceData);
+window.api = api;
 async function init() {
     const indexes = await api.getIndexes();
     updateIndexes(sampleTable.filter.elements, {
         searchBySeller: indexes.sellers
+        
     });
 
 }
