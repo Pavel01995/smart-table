@@ -33,6 +33,7 @@ async function render(action) {
 
     const { total, items } = await api.getRecords(query);
     updatePagination(total, query);
+    // Ждем завершения отрисовки, чтобы тесты не видели пустую таблицу
     await sampleTable.render(items);
 }
 
@@ -76,6 +77,7 @@ async function init() {
     updateIndexes(sampleTable.filter.elements, {
         searchBySeller: indexes.sellers
     });
+    // Вызываем рендер один раз при старте
     await render();
 }
 
