@@ -15,6 +15,8 @@ import { initSearching } from './components/searching.js';
 
 
 // Исходные данные используемые в render()
+// В начале файла, где объявляешь переменные
+let applyFiltering = (query) => query; // Теперь это функция-пустышка, она не даст коду упасть
 const { data, ...indexes } = initData(sourceData);
 
 /**
@@ -48,7 +50,6 @@ async function render(action) {
     query = applyPagination(query, state, action);
     const { total, items } = await api.getRecords(query);
     updatePagination(total, query);
-    console.log(items);
     sampleTable.render(items);
 }
 
